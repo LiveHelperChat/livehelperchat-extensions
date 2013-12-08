@@ -86,10 +86,9 @@
 				lhinst.typing_timeout = setTimeout(sendContentUserTyping, 3000);
 			});
 		}
-		else
-			lhinst.typing_timeout = setTimeout(sendContentUserTyping, 3000);
-	}
-	
+		else{
+			lhinst.typing_timeout = setTimeout(sendContentUserTyping, 3000);}
+	};	
 	$(function() {
 		$("#CSChatMessage").sceditor({
 			customizeToolbar: "<div id='id-operator-typing'><i></i></div>",

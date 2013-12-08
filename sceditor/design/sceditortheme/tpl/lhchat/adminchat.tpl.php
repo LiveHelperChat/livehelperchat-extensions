@@ -64,7 +64,7 @@ $(function() {
 		lhinst.addmsgadmin(chat_id);
 		sc.val(' ');
 		sc.focus();
-	}
+	};
 	$("#CSChatMessage-<?php echo $chat->id?>").data.adminTyping = function(chat_id) {
 		var txt = $("#CSChatMessage-" + chat_id);
 		if (txt.length == 0) return;
@@ -85,8 +85,9 @@ $(function() {
 				txt.data.timeAdminTyping = setTimeout(function(){txt.data.adminTyping(chat_id);},3000);
 			});
 		}
-		else
+		else{
 			$("#CSChatMessage-" + chat_id).data.timeAdminTyping = setTimeout(function(){$("#CSChatMessage-" + chat_id).data.adminTyping(chat_id);},3000);
+			}
 	};
 	$("#CSChatMessage-<?php echo $chat->id?>").data.adminTyping(<?php echo $chat->id?>);
 });
