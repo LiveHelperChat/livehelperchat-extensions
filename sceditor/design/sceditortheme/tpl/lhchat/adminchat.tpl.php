@@ -24,7 +24,7 @@
 
 		<?php include(erLhcoreClassDesign::designtpl('lhchat/part/above_textarea.tpl.php')); ?>
 
-		<textarea rows="4" <?php if ($chat->status == erLhcoreClassModelChat::STATUS_CLOSED_CHAT) : ?>readonly="readonly"<?php endif;?> name="ChatMessage" id="CSChatMessage-<?php echo $chat->id?>"> </textarea>
+		<textarea rows="4" name="ChatMessage" id="CSChatMessage-<?php echo $chat->id?>"> </textarea>
 
 		<?php include(erLhcoreClassDesign::designtpl('lhchat/part/action_block.tpl.php')); ?>
 
@@ -47,48 +47,11 @@ $('#messagesBlock-<?php echo $chat->id?>').animate({ scrollTop: $('#messagesBloc
 lhinst.startSyncAdmin();
 
 $(function() {
+    $("#CSChatMessage-<?php echo $chat->id?>").bind('keyup', 'enter', function(){});
+    
 	$("#CSChatMessage-<?php echo $chat->id?>").sceditor({
-		readOnly: <?php if($chat->status == erLhcoreClassModelChat::STATUS_CLOSED_CHAT) echo 'true'; else echo 'false'; ?>,
-		keyEnter: function() {
-			$('#CSChatMessage-<?php echo $chat->id?>').data.msgSubmit(<?php echo $chat->id?>);
-		}
+		readOnly: <?php if($chat->status == erLhcoreClassModelChat::STATUS_CLOSED_CHAT) echo 'true'; else echo 'false'; ?>
 	});
-	$("#CSChatMessage-<?php echo $chat->id?>").data.msgSubmit = function(chat_id) {
-		$.getJSON(lhinst.wwwDir + 'chat/operatortyping/' + chat_id+'/false',{ }, function(){
-			lhinst.is_typing = false;
-		}).fail(function(){
-			lhinst.is_typing = false;
-		});
-		var sc = $('#CSChatMessage-' + chat_id).data('sceditor');
-		sc.updateOriginal();
-		lhinst.addmsgadmin(chat_id);
-		sc.val(' ');
-		sc.focus();
-	};
-	$("#CSChatMessage-<?php echo $chat->id?>").data.adminTyping = function(chat_id) {
-		var txt = $("#CSChatMessage-" + chat_id);
-		if (txt.length == 0) return;
-		if (!txt.data) return;
-		var editor = txt.data("sceditor");
-		if (!editor) return;
-		var old = txt.data.oldAdminMsg;
-		var msg = editor.getWysiwygEditorValue();
-		if (txt.data.timeAdminTyping)
-			clearTimeout(txt.data.timeAdminTyping);
-		if ((msg && msg!=='' && old && msg !== old) ||
-			(msg && !old) || (msg && old === '')) {
-			old = msg;
-			txt.data.oldAdminMsg = old;
-			$.getJSON(lhinst.wwwDir + 'chat/operatortyping/' + chat_id+'/true',{ }, function(){
-			   txt.data.timeAdminTyping = setTimeout(function(){txt.data.adminTyping(chat_id);},3000);
-			}).fail(function(){
-				txt.data.timeAdminTyping = setTimeout(function(){txt.data.adminTyping(chat_id);},3000);
-			});
-		}
-		else{
-			$("#CSChatMessage-" + chat_id).data.timeAdminTyping = setTimeout(function(){$("#CSChatMessage-" + chat_id).data.adminTyping(chat_id);},3000);
-			}
-	};
-	$("#CSChatMessage-<?php echo $chat->id?>").data.adminTyping(<?php echo $chat->id?>);
+    lhinst.initTypingMonitoringAdmin('<?php echo $chat->id?>'); //monitor and send    
 });
 </script>

@@ -37,7 +37,7 @@
 
     <div class="pt5" id="ChatMessageContainer">
 
-        <textarea rows="4" name="ChatMessage" placeholder="<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('chat/chat','Enter your message')?>" id="CSChatMessage" > </textarea>
+        <textarea rows="4" name="ChatMessage" id="CSChatMessage" ></textarea>
 
 	</div>
 
@@ -46,7 +46,6 @@
     	<input type="button" class="secondary tiny button round right" value="<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('chat/chat','Close')?>" onclick="lhinst.userclosedchatembed();" />
     	<?php endif;?>
     </div>
-
 
 <script type="text/javascript">
     lhinst.setChatID('<?php echo $chat_id?>');
@@ -67,46 +66,14 @@
         lhinst.userclosedchat();
     });
 	
-	var oldUserMsg;
-	function sendContentUserTyping() {
-		if (lhinst.typing_timeout)
-			clearTimeout(lhinst.typing_timeout);
-		var textArea = $('#CSChatMessage');
-		if (textArea === null) return;
-		var editor = textArea.data('sceditor');
-		if (editor === null) return;
-		var msg = editor.getWysiwygEditorValue();
-		if ((msg && msg!=='' && oldUserMsg && msg !== oldUserMsg) ||
-			(msg && !oldUserMsg) || (msg && oldUserMsg === '')) {
-			lhinst.is_typing = true;
-			oldUserMsg = msg;
-			$.postJSON(lhinst.wwwDir + 'chat/usertyping/<?php echo $chat_id; ?>/'+ lhinst.hash +'/true',{msg:msg}, function(){
-				lhinst.typing_timeout = setTimeout(sendContentUserTyping, 3000);
-			}).fail(function() {
-				lhinst.typing_timeout = setTimeout(sendContentUserTyping, 3000);
-			});
-		}
-		else{
-			lhinst.typing_timeout = setTimeout(sendContentUserTyping, 3000);}
-	};	
 	$(function() {
+        $("#CSChatMessage").bind('keyup', 'enter', function(){});
+        
 		$("#CSChatMessage").sceditor({
-			customizeToolbar: "<div id='id-operator-typing'><i></i></div>",
-			keyEnter: function() {
-				$.getJSON(lhinst.wwwDir + 'chat/usertyping/<?php echo $chat_id; ?>/'+lhinst.hash+'/false',{ }, function(){
-					lhinst.is_typing = false;
-				}).fail(function(){
-					lhinst.is_typing = false;
-				});
-			
-				var sc = $('#CSChatMessage').data('sceditor');
-				sc.updateOriginal();
-				lhinst.addmsguser();
-				sc.val(' ');
-				sc.focus();
-			}
+			customizeToolbar: "<div id='id-operator-typing'><i></i></div>"
 		});
-		sendContentUserTyping();
+		lhinst.initTypingMonitoringUser('<?php echo $chat_id?>'); //monitor and send
+        $("#CSChatMessage").data('sceditor').focus();
 	});
 	
 </script>

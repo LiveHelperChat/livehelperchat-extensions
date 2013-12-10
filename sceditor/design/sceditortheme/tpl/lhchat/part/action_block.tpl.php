@@ -1,7 +1,7 @@
 <div class="row" style="margin-top: 10px;">
 	<div class="columns small-4" id="action-block-row-<?php echo $chat->id?>">
 		<div class="send-row<?php if ($chat->status == erLhcoreClassModelChat::STATUS_CLOSED_CHAT) : ?> hide<?php endif;?>">
-			<input type="button" value="<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('chat/adminchat','Send')?>" class="small button round" onclick="$('#CSChatMessage-<?php echo $chat->id?>').data.msgSubmit(<?php echo $chat->id?>);" />
+			<input type="button" value="<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('chat/adminchat','Send')?>" class="small button round" onclick="lhinst.sceditor_SendOperatorMsg(<?php echo $chat->id?>);" />
 		</div>
 		<?php if ($chat->status == erLhcoreClassModelChat::STATUS_CLOSED_CHAT) : ?><input type="button" value="<?php echo erTranslationClassLhTranslation::getInstance()->getTranslation('chat/adminchat','Reopen chat')?>" class="small button secondary round" data-id="<?php echo $chat->id?>" onclick="lhinst.reopenchat($(this))" /><?php endif;?>
 	</div>

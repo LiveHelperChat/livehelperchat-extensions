@@ -458,7 +458,7 @@
 			wysiwygEditor = $wysiwygEditor[0];
 			sourceEditor  = $sourceEditor[0];
 
-			base.width(options.width || $original.outerWidth());
+			base.width(options.width || $original.outerWidth(true));
 			base.height(options.height || $original.height());
 
 			doc = getWysiwygDoc();
@@ -1858,8 +1858,10 @@
 		 * @memberOf jQuery.sceditor.prototype
 		 */
 		base.setWysiwygEditorValue = function (value) {
-			if(!value)
-				value = '<p>' + ($.sceditor.ie ? '' : '<br />') + '</p>';
+			if(!value) {
+                value = '<div></div>'; //Trung fix
+				//value = '<p>' + ($.sceditor.ie ? '' : '<br />') + '</p>';
+            }
 
 			$wysiwygBody[0].innerHTML = value;
 			replaceEmoticons($wysiwygBody[0]);
@@ -5328,7 +5330,7 @@
 		 * Stylesheet to include in the WYSIWYG editor. Will style the WYSIWYG elements
 		 * @type {String}
 		 */
-		style: 'extension/sceditor/design/sceditortheme/css/sceditor.default.css',
+		style: '',
 
 		/**
 		 * Comma separated list of fonts for the font selector
@@ -5380,54 +5382,8 @@
 		 * Emoticon root URL
 		 * @type {String}
 		 */
-		emoticonsRoot: '/extension/sceditor/design/sceditortheme/images/smileys/',
-		emoticons: { //Refer : http://messenger.yahoo.com/features/emoticons/, must sync with lhbbcode.php, exclude: >, <, ",/,\,^
-			dropdown: {
-				":)" : "1.gif",
-				":(" : "2.gif",
-				";)" : "3.gif",
-				":D" : "4.gif",
-				";;)" : "5.gif",
-				":-/" : "7.gif",
-				":x" : "8.gif",
-				':-$' : "32.gif",
-				":P" : "10.gif",
-				":-*" : "11.gif",
-				"=((" : "12.gif",
-				":-O" : "13.gif",
-				":v" : "15.gif",
-				"B-)" : "16.gif",
-				":-S" : "17.gif",
-				"v:)" : "19.gif",
-				":[[" : "20.gif",
-				":]]" : "21.gif",
-				":|" : "22.gif",
-				"(:|" : "37.gif",
-				"=D" : "41.gif",
-				":-w" : "45.gif",
-				"/:)" : "23.gif",
-				"@-)" : "43.gif",
-				":-h" : "103.gif",
-				"=))" : "24.gif",
-				":-b" : "100.gif",
-				":-c" : "101.gif",
-			},
-			hidden: {
-				"B)" : "26.gif",
-				"#:-S" : "18.gif",
-				">:D<" : "6.gif",
-				"X(" : "14.gif",
-				"O:-)" : "25.gif",
-				":!!" : "110.gif",
-				":-v" : "111.gif",
-				":-q" : "112.gif",
-				":-d" : "113.gif",
-				":-e" : "cheer.gif",
-				"@_@" : "studying.gif",
-				"~X(" : "102.gif",
-				
-			}
-		},
+		emoticonsRoot: '',
+		emoticons: {},
 
 		/**
 		 * Width of the editor. Set to null for automatic with
@@ -5579,7 +5535,7 @@
 		 * If to trim the BBCode. Removes any spaces at the start and end of the BBCode string.
 		 * @type {Boolean}
 		 */
-		bbcodeTrim: true,
+		bbcodeTrim: false,
 
 		/**
 		 * If to disable removing block level elements by pressing backspace at the start of them

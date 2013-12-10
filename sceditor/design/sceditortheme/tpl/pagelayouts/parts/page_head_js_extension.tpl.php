@@ -1,1 +1,1 @@
-<script type="text/javascript" language="javascript" src="<?php echo erLhcoreClassDesign::designJS('js/sceditor.js;js/jquery.sceditor.bbcode.js');?>"></script>
+<script type="text/javascript" language="javascript" src="<?php echo erLhcoreClassDesign::designJS('js/jquery.sceditor.bbcode.js;js/sceditor.js');?>"></script>
