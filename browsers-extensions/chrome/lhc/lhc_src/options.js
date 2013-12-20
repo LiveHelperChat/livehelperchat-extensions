@@ -60,3 +60,17 @@ function processContent(){
 		chrome.browserAction.setBadgeText({text: 'F'});
 	}
 }
+function processPopupContent(){
+	var urlPath = getLHCPath();
+	var status = document.getElementById("contentChat");
+	
+	if (urlPath != false) {		 
+		status.innerHTML = '<iframe src="'+urlPath+'/index.php/site_admin/chat/chattabschrome/(mode)/popup" width="700" height="500" frameborder="0" name="FRAME">&lt;p&gt;Your browser does not support iframes.&lt;/p&gt;</iframe>';
+		chrome.browserAction.setBadgeText({text: 'P'});
+		var bkg = chrome.extension.getBackgroundPage();
+		bkg.location.reload();
+	} else {
+		status.innerHTML = 'Please enter installation path in options';
+		chrome.browserAction.setBadgeText({text: 'F'});
+	}
+}
