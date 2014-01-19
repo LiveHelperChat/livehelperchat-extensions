@@ -1,0 +1,18 @@
+Author: Remigijus Kiminas
+Version: 1.0
+
+This module brings nodejs as transport helper. Note all messages are synced using nodejs but the most frequest does.
+
+Requirements:
+a. nodejs on server
+b. Browser with WebSockets support.
+
+Install:
+1. Put nodejshelper on your server extensions folder.
+2. Adjust settings in:
+2.1 extension/nodejshelper/server/settings.js file
+2.2 extension/nodejshelper/design/nodejshelpertheme/tpl/pagelayouts/parts/page_head_js_extension.tpl.php set your node.js server address and port.
+3. Enable extension in settings.ini.php file.
+4. Clean cache from back office.
+5. run node server.js from extension/nodejshelper/server folder.
+6. Start some chat, you should see some messages in console.

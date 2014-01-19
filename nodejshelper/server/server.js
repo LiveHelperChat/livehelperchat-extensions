@@ -1,0 +1,65 @@
+var http = require('http').createServer(handler)
+   , config = require('./settings'); 
+   
+var io = require(config.socketiopath).listen(http).set('log level', 1);
+
+http.listen(config.web.port,config.web.host);
+console.log('LHC Server listening on '+config.web.host+':'+config.web.port);
+
+function handler(req, res) {
+  res.writeHead(200);
+  res.end();
+}
+
+io.sockets.on('connection', function (socket) {
+
+  socket.on('newmessage', function (data) {
+  		if (config.debug.output == true) {
+  			console.log('newmessage:'+data.chat_id); 	
+  		};
+    	socket.broadcast.to('chat_room_'+data.chat_id).emit('newmessage', data)
+  });
+
+  socket.on('usertyping', function (data) {
+  		if (config.debug.output == true) {
+  			console.log('usertyping:'+data.chat_id+'-'+data.status); 
+  		};	
+    	socket.broadcast.to('chat_room_'+data.chat_id).emit('usertyping', data)
+  });
+
+  socket.on('operatortyping', function (data) {
+  		if (config.debug.output == true) {
+  			console.log('operatortyping:'+data.chat_id+'-'+data.status);
+  		}; 	
+    	socket.broadcast.to('chat_room_'+data.chat_id).emit('operatortyping', data)
+  });
+
+  socket.on('userleftchat', function (chat_id) {
+  		if (config.debug.output == true) {
+  			console.log('userleftchat:'+chat_id);
+  		}; 	
+    	socket.broadcast.to('chat_room_'+chat_id).emit('userleftchat', chat_id);
+  });
+
+  socket.on('join', function (chat_id) {
+  		if (config.debug.output == true) {
+  			console.log('join:'+chat_id);  
+  		};		
+  		socket.join('chat_room_'+chat_id);
+  		socket.broadcast.to('chat_room_'+chat_id).emit('userjoined', chat_id);
+  });
+
+  socket.on('leave', function (chat_id) {
+  		if (config.debug.output == true) {
+  			console.log('leave:'+chat_id);
+  		};
+  		socket.leave('chat_room_'+chat_id);
+  });
+  
+  socket.on('syncforce', function (chat_id) { 
+  		if (config.debug.output == true) {
+  			console.log('syncforce:'+chat_id); 	
+  		};
+    	socket.broadcast.to('chat_room_'+chat_id).emit('syncforce', chat_id)
+  });  
+});
