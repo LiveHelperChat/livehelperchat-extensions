@@ -18,6 +18,8 @@
 					this.socket.on('operatortyping', this.operatortyping);
 					this.socket.on('userleftchat', this.userleftchat);
 					this.socket.on('userjoined', this.userleftchat);
+					this.socket.on('addfileupload', this.syncForce);
+					this.socket.on('addfileuserupload', this.syncForce);
 								
 					// Disable standard sync method
 					// We will use node JS notifications
@@ -106,7 +108,17 @@
 				
 				userleftchatNotification : function(chat_id) {
 					nodejshelper.socket.emit('userleftchat',chat_id);
-				}				
+				},
+				
+				addFileUserUpload : function(chat_id) {
+					nodejshelper.socket.emit('syncforce',chat_id);
+					lhinst.syncusercall();
+				},
+				
+				addFileUpload : function(chat_id) {
+					nodejshelper.socket.emit('syncforce',chat_id);
+					lhinst.syncadmincall();
+				}
 				
 		};
 
@@ -120,6 +132,8 @@
 		LHCCallbacks.initTypingMonitoringUser = nodejshelper.initTypingMonitoringUser;
 		LHCCallbacks.initTypingMonitoringAdmin = nodejshelper.initTypingMonitoringAdmin;
 		LHCCallbacks.userleftchatNotification = nodejshelper.userleftchatNotification;
+		LHCCallbacks.addFileUserUpload = nodejshelper.addFileUserUpload;
+		LHCCallbacks.addFileUpload = nodejshelper.addFileUpload;
 	} else {		
 		setTimeout(function(){
 			$('#CSChatMessage').attr('placeholder','Your browser does not support WebSockets, please upgrade.');
