@@ -1,7 +1,7 @@
 <?php 
 	$nodeJsHelperSettings = array (
 		'prefix' => 'http://',
-		'host' => 'dev.livehelperchat.com',
+		'host' => 'localhost',
 		'port' => '31129',
 	);
 ?>

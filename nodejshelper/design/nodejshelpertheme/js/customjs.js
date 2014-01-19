@@ -48,7 +48,6 @@
 					if (lhinst.chat_id > 0) {
 						nodejshelper.socket.emit('join',lhinst.chat_id);
 					};
-					console.log('connected');
 				},
 				
 				usertyping : function(data) {
