@@ -17,7 +17,7 @@
 					this.socket.on('usertyping', this.usertyping);
 					this.socket.on('operatortyping', this.operatortyping);
 					this.socket.on('userleftchat', this.userleftchat);
-					this.socket.on('userjoined', this.userleftchat);
+					this.socket.on('userjoined', this.userjoined);
 					this.socket.on('addfileupload', this.syncForce);
 					this.socket.on('addfileuserupload', this.syncForce);
 								
@@ -54,16 +54,18 @@
 					if (data.status == false) {
 						$('#user-is-typing-'+data.chat_id).fadeOut();
 					} else {
-						lhinst.syncadmincall();
+						$('#user-is-typing-'+data.chat_id).fadeIn().text(data.msg);
 					}
 				},
 					
 				operatortyping : function(data) {
 					if (lhinst.chat_id == data.chat_id) {
 						if (data.status == false) {
-							$('#id-operator-typing').fadeOut();
+							setTimeout(function(){
+								$('#id-operator-typing').fadeOut();
+							},1000);							
 						} else {
-							lhinst.syncusercall();
+							$('#id-operator-typing').fadeIn().text(data.msg);
 						}
 					}
 				},
@@ -72,8 +74,14 @@
 					nodejshelper.socket.emit('syncforce',chat_id);
 				},
 				
-				userleftchat : function(chat_id) {
+				userleftchat : function(chat_id) {				
 					lhinst.syncadmincall();
+				},
+				
+				userjoined : function(chat_id) {	
+					setTimeout(function(){
+						lhinst.syncadmincall();
+					},1500);					
 				},
 				
 				// Disable user timeout message
@@ -97,14 +105,6 @@
 					clearTimeout(inst.userTimeout);	
 				},
 				
-				initTypingMonitoringUser : function(chat_id,status) {
-					nodejshelper.socket.emit('usertyping',{chat_id:chat_id,status:status});
-				},				
-				
-				initTypingMonitoringAdmin : function(chat_id,status) {
-					nodejshelper.socket.emit('operatortyping',{chat_id:chat_id,status:status});
-				},				
-				
 				userleftchatNotification : function(chat_id) {
 					nodejshelper.socket.emit('userleftchat',chat_id);
 				},
@@ -117,6 +117,23 @@
 				addFileUpload : function(chat_id) {
 					nodejshelper.socket.emit('syncforce',chat_id);
 					lhinst.syncadmincall();
+				},
+				
+				typingStoppedUserInform : function(data) {					
+					nodejshelper.socket.emit('usertyping',data);
+				},
+				
+				initTypingMonitoringUserInform : function(data) {
+					nodejshelper.socket.emit('usertyping',data);
+				},
+				
+				initTypingMonitoringAdminInform : function(data) {
+					data.msg = nodejshelperConfig.typer;
+					nodejshelper.socket.emit('operatortyping',data);
+				},
+				
+				typingStoppedOperatorInform : function(data) {
+					nodejshelper.socket.emit('operatortyping',data);
 				}
 				
 		};
@@ -128,11 +145,15 @@
 		LHCCallbacks.addmsgadmin = nodejshelper.addmsgadmin;
 		LHCCallbacks.addSynchroChat = nodejshelper.addSynchroChat;
 		LHCCallbacks.removeSynchroChat = nodejshelper.removeSynchroChat;
-		LHCCallbacks.initTypingMonitoringUser = nodejshelper.initTypingMonitoringUser;
 		LHCCallbacks.initTypingMonitoringAdmin = nodejshelper.initTypingMonitoringAdmin;
 		LHCCallbacks.userleftchatNotification = nodejshelper.userleftchatNotification;
 		LHCCallbacks.addFileUserUpload = nodejshelper.addFileUserUpload;
-		LHCCallbacks.addFileUpload = nodejshelper.addFileUpload;
+		LHCCallbacks.addFileUpload = nodejshelper.addFileUpload;		
+		LHCCallbacks.typingStoppedUserInform = nodejshelper.typingStoppedUserInform;
+		LHCCallbacks.initTypingMonitoringUserInform = nodejshelper.initTypingMonitoringUserInform;
+		LHCCallbacks.initTypingMonitoringAdminInform = nodejshelper.initTypingMonitoringAdminInform;
+		LHCCallbacks.typingStoppedOperatorInform = nodejshelper.typingStoppedOperatorInform;
+		
 	} else {		
 		setTimeout(function(){
 			$('#CSChatMessage').attr('placeholder','Your browser does not support WebSockets, please upgrade.');
