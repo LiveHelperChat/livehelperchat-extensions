@@ -93,8 +93,14 @@
 					nodejshelper.operatorForced = false;
 				},
 						
-				addSynchroChat : function(chat_id,message_id) {
-					nodejshelper.socket.emit('join',chat_id);
+				addSynchroChat : function(chat_id,message_id) {					
+					if (nodejshelper.socket) {
+						nodejshelper.socket.emit('join',chat_id);
+					} else {
+						setTimeout(function(){
+							nodejshelper.socket.emit('join',chat_id);
+						},1000);
+					}
 				},
 				
 				removeSynchroChat : function(chat_id) {
@@ -138,8 +144,11 @@
 				
 		};
 
-		nodejshelper.init();
-
+		// Give half second for standard script to finish their job
+		setTimeout(function(){
+			nodejshelper.init();
+		},500);
+		
 		LHCCallbacks.syncadmincall = nodejshelper.syncadmincall;
 		LHCCallbacks.syncusercall = nodejshelper.syncusercall;
 		LHCCallbacks.addmsgadmin = nodejshelper.addmsgadmin;
