@@ -1,7 +1,4 @@
-(function($){
-	var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
-	
-	if (support !== null) {		
+(function($){	
 		var nodejshelper = {
 
 				operatorForced : false,	
@@ -161,15 +158,6 @@
 		LHCCallbacks.typingStoppedUserInform = nodejshelper.typingStoppedUserInform;
 		LHCCallbacks.initTypingMonitoringUserInform = nodejshelper.initTypingMonitoringUserInform;
 		LHCCallbacks.initTypingMonitoringAdminInform = nodejshelper.initTypingMonitoringAdminInform;
-		LHCCallbacks.typingStoppedOperatorInform = nodejshelper.typingStoppedOperatorInform;
-		
-	} else {		
-		setTimeout(function(){
-			$('#CSChatMessage').attr('placeholder','Your browser does not support WebSockets, please upgrade.');
-			$('#CSChatMessage').val('Your browser does not support WebSockets, please upgrade.');
-			$('#CSChatMessage').attr('title','Your browser does not support WebSockets, please upgrade.');
-			$('#CSChatMessage').attr('readonly','readonly');			
-		},2000);
-	};
+		LHCCallbacks.typingStoppedOperatorInform = nodejshelper.typingStoppedOperatorInform;			
 
 })(jQuery);
