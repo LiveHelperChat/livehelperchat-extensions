@@ -34,7 +34,21 @@
 				
 				onMessage : function(messageData) {	
 					if (lhinst.chat_id) {
-						lhinst.updateUserSyncInterface(lhinst,messageData.data);			
+																		
+						if ($('#messagesBlock').find('.usr-tit').size() > 0 && $('#messagesBlock').find('.usr-tit').last().attr('data-sender') == messageData.data.data.sender){
+							messageData.data.result = messageData.data.data.ur;							
+						} else {
+							messageData.data.result = messageData.data.data.or;
+						}
+						
+						messageData.data.uw = 'false';
+						messageData.data.blocked = 'false';
+						messageData.data.status = 'true';
+						messageData.data.ott = '';
+						messageData.data.error = 'false';
+						messageData.data.message_id = messageData.data.data.id;
+																			
+						lhinst.updateUserSyncInterface(lhinst,messageData.data);	
 						clearTimeout(lhinst.userTimeout);	
 					} else {
 						lhinst.syncadmincall();
@@ -71,14 +85,14 @@
 					nodejshelper.socket.emit('syncforce',chat_id);
 				},
 				
-				userleftchat : function(chat_id) {				
+				userleftchat : function(chat_id) {					
 					lhinst.syncadmincall();
 				},
 				
 				userjoined : function(chat_id) {	
 					setTimeout(function(){
 						lhinst.syncadmincall();
-					},1500);					
+					},4000);
 				},
 				
 				// Disable user timeout message
@@ -89,7 +103,13 @@
 					};
 					nodejshelper.operatorForced = false;
 				},
-						
+					
+				addmsguserchatbox : function(inst,data) {
+					nodejshelper.operatorForced = true;
+					nodejshelper.socket.emit('newmessage',{chat_id:inst.chat_id,data:data});
+					return false;
+				},
+				
 				addSynchroChat : function(chat_id,message_id) {					
 					if (nodejshelper.socket) {
 						nodejshelper.socket.emit('join',chat_id);
@@ -149,6 +169,7 @@
 		LHCCallbacks.syncadmincall = nodejshelper.syncadmincall;
 		LHCCallbacks.syncusercall = nodejshelper.syncusercall;
 		LHCCallbacks.addmsgadmin = nodejshelper.addmsgadmin;
+		LHCCallbacks.addmsguserchatbox = nodejshelper.addmsguserchatbox;
 		LHCCallbacks.addSynchroChat = nodejshelper.addSynchroChat;
 		LHCCallbacks.removeSynchroChat = nodejshelper.removeSynchroChat;
 		LHCCallbacks.initTypingMonitoringAdmin = nodejshelper.initTypingMonitoringAdmin;
@@ -158,6 +179,9 @@
 		LHCCallbacks.typingStoppedUserInform = nodejshelper.typingStoppedUserInform;
 		LHCCallbacks.initTypingMonitoringUserInform = nodejshelper.initTypingMonitoringUserInform;
 		LHCCallbacks.initTypingMonitoringAdminInform = nodejshelper.initTypingMonitoringAdminInform;
-		LHCCallbacks.typingStoppedOperatorInform = nodejshelper.typingStoppedOperatorInform;			
+		LHCCallbacks.typingStoppedOperatorInform = nodejshelper.typingStoppedOperatorInform;
+		
+		// Additional options
+		lhinst.appendSyncArgument = '/(render)/true';
 
 })(jQuery);
