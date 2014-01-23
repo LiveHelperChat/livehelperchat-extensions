@@ -12,7 +12,6 @@ io.enable('browser client gzip');          // gzip the file
 // default port)
 io.set('transports', [
     'websocket'
-  , 'htmlfile'
   , 'xhr-polling'
   , 'jsonp-polling'
 ]);
