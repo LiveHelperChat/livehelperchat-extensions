@@ -17,7 +17,7 @@
 					this.socket.on('userjoined', this.userjoined);
 					this.socket.on('addfileupload', this.syncForce);
 					this.socket.on('addfileuserupload', this.syncForce);
-								
+													
 					// Disable standard sync method
 					// We will use node JS notifications
 					clearTimeout(lhinst.userTimeout);
@@ -81,7 +81,7 @@
 					}
 				},
 				
-				addmsgadmin : function(chat_id) {
+				syncforceaction : function(chat_id) {
 					nodejshelper.socket.emit('syncforce',chat_id);
 				},
 				
@@ -141,7 +141,7 @@
 					nodejshelper.socket.emit('syncforce',chat_id);
 					lhinst.syncadmincall();
 				},
-				
+								
 				typingStoppedUserInform : function(data) {					
 					nodejshelper.socket.emit('usertyping',data);
 				},
@@ -157,7 +157,8 @@
 				
 				typingStoppedOperatorInform : function(data) {
 					nodejshelper.socket.emit('operatortyping',data);
-				}
+				}			
+				
 				
 		};
 
@@ -168,7 +169,7 @@
 		
 		LHCCallbacks.syncadmincall = nodejshelper.syncadmincall;
 		LHCCallbacks.syncusercall = nodejshelper.syncusercall;
-		LHCCallbacks.addmsgadmin = nodejshelper.addmsgadmin;
+		LHCCallbacks.addmsgadmin = nodejshelper.syncforceaction;
 		LHCCallbacks.addmsguserchatbox = nodejshelper.addmsguserchatbox;
 		LHCCallbacks.addSynchroChat = nodejshelper.addSynchroChat;
 		LHCCallbacks.removeSynchroChat = nodejshelper.removeSynchroChat;
@@ -180,6 +181,8 @@
 		LHCCallbacks.initTypingMonitoringUserInform = nodejshelper.initTypingMonitoringUserInform;
 		LHCCallbacks.initTypingMonitoringAdminInform = nodejshelper.initTypingMonitoringAdminInform;
 		LHCCallbacks.typingStoppedOperatorInform = nodejshelper.typingStoppedOperatorInform;
+		LHCCallbacks.operatorAcceptedTransfer = nodejshelper.syncforceaction;
+		LHCCallbacks.uservoted = nodejshelper.syncforceaction;
 		
 		// Additional options
 		lhinst.appendSyncArgument = '/(render)/true';
