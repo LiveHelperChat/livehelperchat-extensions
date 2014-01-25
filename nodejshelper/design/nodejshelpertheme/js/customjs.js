@@ -5,6 +5,9 @@
 					
 				socket : null, 
 				
+				intervalSyncTimeout : null,
+				chatActivated : false,
+				
 				init : function(){
 					this.socket = io.connect(nodejshelperHostConnect);
 					
@@ -21,12 +24,27 @@
 					// Disable standard sync method
 					// We will use node JS notifications
 					clearTimeout(lhinst.userTimeout);
+					
+					// Required to workflow to work correctly
+					this.setupForceTimeout();
+					
+				},
+				
+				setupForceTimeout : function() {	
+					clearTimeout(this.intervalSyncTimeout);
+					if (nodejshelperConfig.sync == true && this.chatActivated == false) {
+						this.intervalSyncTimeout = setTimeout(function(){
+							nodejshelper.operatorForced = true;
+							lhinst.syncusercall();
+						}, nodejshelperConfig.synctimeout*1000);
+					}
 				},
 				
 				syncForce : function(chat_id) {
 					if (lhinst.chat_id == chat_id) {
 						nodejshelper.operatorForced = true;
 						lhinst.syncusercall();
+						nodejshelper.chatActivated = true;
 					} else {
 						lhinst.syncadmincall();
 					}
@@ -97,7 +115,8 @@
 				
 				// Disable user timeout message
 				syncusercall : function(inst,data) {
-					clearTimeout(inst.userTimeout);	
+					clearTimeout(inst.userTimeout);						
+					nodejshelper.setupForceTimeout();
 					if (nodejshelper.operatorForced == false){
 						nodejshelper.socket.emit('newmessage',{chat_id:inst.chat_id,data:data});
 					};
