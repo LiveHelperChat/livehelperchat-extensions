@@ -148,7 +148,9 @@
 				},
 				
 				userleftchatNotification : function(chat_id) {
-					nodejshelper.socket.emit('userleftchat',chat_id);
+					if (nodejshelper.socket) {
+						nodejshelper.socket.emit('userleftchat',chat_id);
+					}
 				},
 				
 				addFileUserUpload : function(chat_id) {
