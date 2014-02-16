@@ -73,7 +73,8 @@
 					}
 				},
 				
-				onConnected : function() {			
+				onConnected : function() {
+				
 					if (lhinst.chat_id > 0) {
 						nodejshelper.socket.emit('join',lhinst.chat_id);
 					};
@@ -162,6 +163,10 @@
 					nodejshelper.socket.emit('syncforce',chat_id);
 					lhinst.syncadmincall();
 				},
+				
+				addRemoteCommand : function(chat_id) {
+					nodejshelper.socket.emit('syncforce',chat_id);					
+				},
 								
 				typingStoppedUserInform : function(data) {					
 					nodejshelper.socket.emit('usertyping',data);
@@ -204,6 +209,7 @@
 		LHCCallbacks.typingStoppedOperatorInform = nodejshelper.typingStoppedOperatorInform;
 		LHCCallbacks.operatorAcceptedTransfer = nodejshelper.syncforceaction;
 		LHCCallbacks.uservoted = nodejshelper.syncforceaction;
+		LHCCallbacks.addRemoteCommand = nodejshelper.addRemoteCommand;
 		
 		// Additional options
 		lhinst.appendSyncArgument = '/(render)/true';
