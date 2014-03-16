@@ -52,21 +52,23 @@
 				
 				onMessage : function(messageData) {	
 					if (lhinst.chat_id) {
-																		
-						if ($('#messagesBlock').find('.usr-tit').size() > 0 && $('#messagesBlock').find('.usr-tit').last().attr('data-sender') == messageData.data.data.sender){
-							messageData.data.result = messageData.data.data.ur;							
-						} else {
-							messageData.data.result = messageData.data.data.or;
-						}
 						
-						messageData.data.uw = 'false';
-						messageData.data.blocked = 'false';
-						messageData.data.status = 'true';
-						messageData.data.ott = '';
-						messageData.data.error = 'false';
-						messageData.data.message_id = messageData.data.data.id;
-																			
-						lhinst.updateUserSyncInterface(lhinst,messageData.data);	
+						if (typeof messageData.data.data !== 'undefined') {	
+							if ($('#messagesBlock').find('.usr-tit').size() > 0 && $('#messagesBlock').find('.usr-tit').last().attr('data-sender') == messageData.data.data.sender){
+								messageData.data.result = messageData.data.data.ur;							
+							} else {
+								messageData.data.result = messageData.data.data.or;
+							}
+							
+							messageData.data.uw = 'false';
+							messageData.data.blocked = 'false';
+							messageData.data.status = 'true';
+							messageData.data.ott = '';
+							messageData.data.error = 'false';
+							messageData.data.message_id = messageData.data.data.id;
+																				
+							lhinst.updateUserSyncInterface(lhinst,messageData.data);
+						};	
 						clearTimeout(lhinst.userTimeout);	
 					} else {
 						lhinst.syncadmincall();

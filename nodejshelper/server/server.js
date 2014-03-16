@@ -30,7 +30,9 @@ io.sockets.on('connection', function (socket) {
   		if (config.debug.output == true) {
   			console.log('newmessage:'+data.chat_id); 	
   		};
-    	socket.broadcast.to('chat_room_'+data.chat_id).emit('newmessage', data)
+  		if (data.data.message_id != "0"){
+  			socket.broadcast.to('chat_room_'+data.chat_id).emit('newmessage', data);
+    	};
   });
 
   socket.on('usertyping', function (data) {
