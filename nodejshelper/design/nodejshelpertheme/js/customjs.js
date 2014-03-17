@@ -64,6 +64,7 @@
 							messageData.data.blocked = 'false';
 							messageData.data.status = 'true';
 							messageData.data.ott = '';
+							messageData.data.op = '';
 							messageData.data.error = 'false';
 							messageData.data.message_id = messageData.data.data.id;
 																				
