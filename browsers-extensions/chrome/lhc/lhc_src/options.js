@@ -6,9 +6,19 @@ function save_options() {
 	var select = document.getElementById("lhcusername");
 	localStorage["lhc_usr"] = select.value;
 	
-  var select = document.getElementById("lhcpassword");
-  localStorage["lhc_pwd"] = select.value;
-
+	var select = document.getElementById("lhcpassword");
+	localStorage["lhc_pwd"] = select.value;
+	
+	var select = document.getElementById("lhc_offlinetimeout");
+	if (select.value >= 15) {
+		localStorage["lhc_offlinetimeout"] = select.value;
+	} else {
+		localStorage["lhc_offlinetimeout"] = select.value = 60;
+	}
+		
+	var select = document.getElementById("lhc_autostatus");
+	localStorage["lhc_autostatus"] = select.checked;
+	
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
   status.innerHTML = "Options Saved.";
@@ -37,7 +47,16 @@ function restore_options() {
   if (lhc_pwd) {
 	  document.getElementById("lhcpassword").value = lhc_pwd;
   };
-  
+    
+  var lhc_offlinetimeout = localStorage["lhc_offlinetimeout"];
+  if (lhc_offlinetimeout) {
+	  document.getElementById("lhc_offlinetimeout").value = lhc_offlinetimeout;
+  };
+    
+  var lhc_astatus = localStorage["lhc_autostatus"];
+  if (lhc_astatus && lhc_astatus == 'true') {		
+	  document.getElementById("lhc_autostatus").checked = lhc_astatus;
+  };  
 }
 
 function getLHCPath(){
@@ -72,6 +91,26 @@ function handleMessage(e) {
     	}
 }
 
+
+
+function statusAppChanged(state) {
+	
+	var urlPath = getLHCPath();
+	var status = document.getElementById("contentChat");
+			
+	if (state == "active") {
+		status.innerHTML = '<iframe src="'+urlPath+'/index.php/site_admin/user/setoffline/false" width="700" height="500" frameborder="0" name="FRAME">&lt;p&gt;Your browser does not support iframes.&lt;/p&gt;</iframe>';
+		chrome.browserAction.setBadgeText({text: 'On'});
+	} else {
+		status.innerHTML = '<iframe src="'+urlPath+'/index.php/site_admin/user/setoffline/true" width="700" height="500" frameborder="0" name="FRAME">&lt;p&gt;Your browser does not support iframes.&lt;/p&gt;</iframe>';
+		chrome.browserAction.setBadgeText({text: 'Off'});
+	}
+	
+	setTimeout(function(){
+		status.innerHTML = '<iframe src="'+urlPath+'/index.php/site_admin/chat/chattabschrome/" width="700" height="500" frameborder="0" name="FRAME">&lt;p&gt;Your browser does not support iframes.&lt;/p&gt;</iframe>';
+	},2000);
+};
+
 function processContentBackground(){
 	var urlPath = getLHCPath();
     var status = document.getElementById("contentChat");
@@ -82,7 +121,18 @@ function processContentBackground(){
             if ( window.addEventListener ){
                     window.addEventListener("message", handleMessage, false);
             };
-            chrome.browserAction.setBadgeText({text: 'P'});
+			
+            chrome.browserAction.setBadgeText({text: 'P'});	
+
+			if (localStorage["lhc_autostatus"] && localStorage["lhc_autostatus"] == 'true') {
+				
+				if (localStorage["lhc_offlinetimeout"] && parseInt(localStorage["lhc_offlinetimeout"]) >= 15) {
+					chrome.idle.setDetectionInterval(parseInt(localStorage["lhc_offlinetimeout"]));
+				}	
+				
+				chrome.idle.onStateChanged.addListener(statusAppChanged);	
+			}
+			
     } else {
             status.innerHTML = 'Please enter installation path in options';
             chrome.browserAction.setBadgeText({text: 'F'});

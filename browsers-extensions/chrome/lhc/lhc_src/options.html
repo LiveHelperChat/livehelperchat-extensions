@@ -16,8 +16,15 @@
 
 <label>Password:</label>
 <div><input type="password" id="lhcpassword" value="" style="width:100%"></div>
+<br/>
+<div><b>Automatic offline/online</b></div>
 
+<div>
+<label><input type="checkbox" id="lhc_autostatus" > automatically change my status to offline/online</label>
+</div>
 
+<label>Inactivity timeout, minimum 15 seconds:</label>
+<div><input type="int" id="lhc_offlinetimeout" value="15" style="width:100%" ></div>
 
 <br>
 <div id="status"></div>
