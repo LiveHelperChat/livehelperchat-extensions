@@ -9,7 +9,7 @@
 				chatActivated : false,
 				
 				init : function(){
-					this.socket = io.connect(nodejshelperHostConnect);
+					this.socket = io.connect(nodejshelperHostConnect,{secure:nodejshelperConfig.secure});
 					
 					this.socket.on('connect', this.onConnected);
 					this.socket.on('newmessage', this.onMessage);
@@ -20,7 +20,8 @@
 					this.socket.on('userjoined', this.userjoined);
 					this.socket.on('addfileupload', this.syncForce);
 					this.socket.on('addfileuserupload', this.syncForce);
-													
+					this.socket.on('userpostedmessage', this.userpostedmessage);
+					
 					// Disable standard sync method
 					// We will use node JS notifications
 					clearTimeout(lhinst.userTimeout);
@@ -115,6 +116,14 @@
 					setTimeout(function(){
 						lhinst.syncadmincall();
 					},4000);
+				},
+
+				addmsguser : function(inst) {
+					nodejshelper.socket.emit('userpostedmessage',{chat_id:inst.chat_id});
+				},
+				
+				userpostedmessage : function() {					
+					lhinst.syncadmincall();
 				},
 				
 				// Disable user timeout message
@@ -213,6 +222,7 @@
 		LHCCallbacks.operatorAcceptedTransfer = nodejshelper.syncforceaction;
 		LHCCallbacks.uservoted = nodejshelper.syncforceaction;
 		LHCCallbacks.addRemoteCommand = nodejshelper.addRemoteCommand;
+		LHCCallbacks.addmsguser = nodejshelper.addmsguser;
 		
 		// Additional options
 		lhinst.appendSyncArgument = '/(render)/true';

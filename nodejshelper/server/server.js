@@ -34,7 +34,14 @@ io.sockets.on('connection', function (socket) {
   			socket.broadcast.to('chat_room_'+data.chat_id).emit('newmessage', data);
     	};
   });
-
+  
+  socket.on('userpostedmessage', function (data) {
+		if (config.debug.output == true) {
+			console.log('userpostedmessage:'+data.chat_id); 	
+		};  		
+		socket.broadcast.to('chat_room_'+data.chat_id).emit('userpostedmessage', data);    	
+  });
+  
   socket.on('usertyping', function (data) {
   		if (config.debug.output == true) {
   			console.log('usertyping:'+data.chat_id+'-'+data.status); 
