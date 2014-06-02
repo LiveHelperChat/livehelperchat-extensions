@@ -21,6 +21,7 @@
 					this.socket.on('addfileupload', this.syncForce);
 					this.socket.on('addfileuserupload', this.syncForce);
 					this.socket.on('userpostedmessage', this.userpostedmessage);
+					this.socket.on('userstartedpostmessage', this.userstartedpostmessage);
 					
 					// Disable standard sync method
 					// We will use node JS notifications
@@ -117,13 +118,23 @@
 						lhinst.syncadmincall();
 					},4000);
 				},
-
+				
 				addmsguser : function(inst) {
 					nodejshelper.socket.emit('userpostedmessage',{chat_id:inst.chat_id});
+				},
+
+				addmsguserbefore : function(inst) {
+					nodejshelper.socket.emit('userstartedpostmessage',{chat_id:inst.chat_id});
 				},
 				
 				userpostedmessage : function() {					
 					lhinst.syncadmincall();
+				},
+				
+				userstartedpostmessage : function() {
+					setTimeout( function() {
+						lhinst.syncadmincall();
+					},5000);// Give 5 seconds for user message to be stored in database
 				},
 				
 				// Disable user timeout message
@@ -223,6 +234,7 @@
 		LHCCallbacks.uservoted = nodejshelper.syncforceaction;
 		LHCCallbacks.addRemoteCommand = nodejshelper.addRemoteCommand;
 		LHCCallbacks.addmsguser = nodejshelper.addmsguser;
+		LHCCallbacks.addmsguserbefore = nodejshelper.addmsguserbefore;
 		
 		// Additional options
 		lhinst.appendSyncArgument = '/(render)/true';

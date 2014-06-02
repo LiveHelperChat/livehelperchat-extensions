@@ -36,10 +36,17 @@ io.sockets.on('connection', function (socket) {
   });
   
   socket.on('userpostedmessage', function (data) {
+	  if (config.debug.output == true) {
+		  console.log('userpostedmessage:'+data.chat_id); 	
+	  };  		
+	  socket.broadcast.to('chat_room_'+data.chat_id).emit('userpostedmessage', data);    	
+  });
+  
+  socket.on('userstartedpostmessage', function (data) {
 		if (config.debug.output == true) {
-			console.log('userpostedmessage:'+data.chat_id); 	
+			console.log('userstartedpostmessage:'+data.chat_id); 	
 		};  		
-		socket.broadcast.to('chat_room_'+data.chat_id).emit('userpostedmessage', data);    	
+		socket.broadcast.to('chat_room_'+data.chat_id).emit('userstartedpostmessage', data);    	
   });
   
   socket.on('usertyping', function (data) {
