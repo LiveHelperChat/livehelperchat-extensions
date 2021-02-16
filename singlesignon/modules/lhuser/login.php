@@ -24,7 +24,7 @@ if (!$currentUser->isLogged()){
     include($settings['sso_location']);
     
     try {
-        $as = new SimpleSAML_Auth_Simple('default-sp');
+        $as = new \SimpleSAML\Auth\Simple('default-sp');
         $as->requireAuth();     
         erLhcoreClassSingleSignOn::loginBySSO($as->getAttributes());    
         
