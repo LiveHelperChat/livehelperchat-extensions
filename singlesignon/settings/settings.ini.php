@@ -1,7 +1,7 @@
 <?php 
 
 return array( 
-		'sso_location' => '../../simplesamlphp/lib/_autoload.php',
+		'sso_location' => 'extension/simplesamlphp/lib/_autoload.php',
 		'post_host' => 'http://exmaple.com/chatclosehandler.php',
         'attr_map' => array(   
             'email'     => 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn',
